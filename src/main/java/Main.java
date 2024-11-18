@@ -1,14 +1,18 @@
+import shell.CommandExecutor;
+
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        CommandExecutor executor = new CommandExecutor();
+
         Scanner in = new Scanner(System.in);
 
         prompt();
         while (in.hasNextLine()) {
             String command = in.nextLine();
-            System.out.printf("%s: command not found%n", command);
+            executor.execute(command);
             prompt();
         }
     }

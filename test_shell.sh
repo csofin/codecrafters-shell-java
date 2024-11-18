@@ -43,12 +43,25 @@ function repl() {
   printf 'Got %s\nTest Passed\n' "$out"
 }
 
+function exit() {
+  printf 'Running test for Stage #PN5\n'
+  printf 'exit 0' | exec java -jar "$jar" "$@"
+  out=$?
+  if [ "$out" -ne 0 ]; then
+    printf 'Expected exit with status 0, got %s\nTest Failed' "$out"
+    exit 1
+  fi
+  printf 'Program exited with status 0\nTest Passed\n'
+}
+
 function test() {
   print_prompt
   printf '\n'
   handle_missing_commands
   printf '\n'
   repl
+  printf '\n'
+  exit
 }
 
 if [ $# -eq 0 ]; then
