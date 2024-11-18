@@ -65,6 +65,17 @@ function echo() {
   printf 'Got %s\nTest Passed\n' "$out"
 }
 
+function type() {
+  printf 'Running test for Stage #EZ5 (The type builtin: builtins)\n'
+  out=$(printf 'type exit' | exec java -jar "$jar" "$@" | head -1)
+  expected="exit is a shell builtin"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$expected"
+}
+
 function test() {
   print_prompt
   printf '\n'
@@ -75,6 +86,8 @@ function test() {
   exit
   printf '\n'
   echo
+  printf '\n'
+  type
 }
 
 if [ $# -eq 0 ]; then

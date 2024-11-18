@@ -14,7 +14,8 @@ public class CommandExecutor {
     public CommandExecutor() {
         commands = Map.of(
                 Regex.EXIT.get(), ExitCommand::new,
-                Regex.ECHO.get(), EchoCommand::new
+                Regex.ECHO.get(), EchoCommand::new,
+                Regex.TYPE.get(), TypeCommand::new
         );
     }
 
