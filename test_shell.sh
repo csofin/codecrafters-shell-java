@@ -44,7 +44,7 @@ function repl() {
 }
 
 function exit() {
-  printf 'Running test for Stage #PN5\n'
+  printf 'Running test for Stage #PN5 (The exit builtin)\n'
   printf 'exit 0' | exec java -jar "$jar" "$@"
   out=$?
   if [ "$out" -ne 0 ]; then
@@ -52,6 +52,17 @@ function exit() {
     exit 1
   fi
   printf 'Program exited with status 0\nTest Passed\n'
+}
+
+function echo() {
+  printf 'Running test for Stage #IZ3 (The echo builtin)\n'
+  phrase="apple orange pear"
+  out=$(printf 'echo %s' "$phrase" | exec java -jar "$jar" "$@" | head -1)
+  if [[ ! $out =~ $phrase ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$phrase" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
 }
 
 function test() {
@@ -62,6 +73,8 @@ function test() {
   repl
   printf '\n'
   exit
+  printf '\n'
+  echo
 }
 
 if [ $# -eq 0 ]; then

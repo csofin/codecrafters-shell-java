@@ -13,7 +13,8 @@ public class CommandExecutor {
 
     public CommandExecutor() {
         commands = Map.of(
-                Regex.EXIT.get(), ExitCommand::new
+                Regex.EXIT.get(), ExitCommand::new,
+                Regex.ECHO.get(), EchoCommand::new
         );
     }
 
