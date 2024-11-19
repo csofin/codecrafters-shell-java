@@ -1,38 +1,31 @@
 package shell;
 
+import util.Pair;
 import util.Regex;
 
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CommandExecutor {
 
-    private final Map<Pattern, Supplier<Command>> commands;
+    private final Map<Pattern, Command> commands;
 
     public CommandExecutor() {
         commands = Map.of(
-                Regex.EXIT.get(), ExitCommand::new,
-                Regex.ECHO.get(), EchoCommand::new,
-                Regex.TYPE.get(), TypeCommand::new
+                Regex.EXIT.get(), new ExitCommand(),
+                Regex.ECHO.get(), new EchoCommand(),
+                Regex.TYPE.get(), new TypeCommand()
         );
     }
 
     public void execute(String command) {
         commands.entrySet()
                 .stream()
-                .collect(
-                        Collectors.toMap(
-                                e -> e.getKey().matcher(command),
-                                Map.Entry::getValue
-                        ))
-                .entrySet()
-                .stream()
-                .filter(e -> e.getKey().find())
+                .map(e -> new Pair<>(e.getKey().matcher(command), e.getValue()))
+                .filter(e -> e.first().find())
                 .findFirst()
                 .ifPresentOrElse(
-                        e -> e.getValue().get().execute(e.getKey().group(1)),
+                        e -> e.second().execute(e.first().group(1)),
                         () -> System.out.printf("%s: command not found%n", command)
                 );
     }

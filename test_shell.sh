@@ -32,12 +32,12 @@ function repl() {
   expected="command: command not found"
   line_1=$(echo "$out" | head -1)
   if [[ ! $line_1 =~ $expected ]] ; then
-    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$line_1"
     exit 1
   fi
   line_2=$(echo "$out" | head -2 | tail -1)
   if [[ ! $line_2 =~ $ ]] ; then
-    printf 'Expected prompt $, got %s\nTest Failed' "$out"
+    printf 'Expected prompt $, got %s\nTest Failed' "$line_2"
     exit 1
   fi
   printf 'Got %s\nTest Passed\n' "$out"
@@ -76,6 +76,31 @@ function type() {
   printf 'Got %s\nTest Passed\n' "$expected"
 }
 
+function type_executable_files() {
+  printf 'Running test for Stage #MG5 (The type builtin: executable files)\n'
+  out=$(printf 'type cat' | exec java -DPATH="/bin/" -jar "$jar" "$@" | head -1)
+  expected="cat is /bin/cat"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\n' "$expected"
+  out=$(printf 'type exit' | exec java -jar "$jar" "$@" | head -1)
+  expected="exit is a shell builtin"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\n' "$expected"
+  out=$(printf 'command' | exec java -jar "$jar" "$@" | head -1)
+  expected="command: command not found"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$expected"
+}
+
 function test() {
   print_prompt
   printf '\n'
@@ -88,6 +113,8 @@ function test() {
   echo
   printf '\n'
   type
+  printf '\n'
+  type_executable_files
 }
 
 if [ $# -eq 0 ]; then
