@@ -13,7 +13,7 @@ public class Main {
 
         Scanner in = new Scanner(System.in);
         while (in.hasNextLine()) {
-            String command = in.nextLine();
+            String command = in.nextLine().strip();
             executor.execute(command);
             prompt();
         }

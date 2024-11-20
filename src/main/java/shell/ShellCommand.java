@@ -1,6 +1,7 @@
 package shell;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public enum ShellCommand {
     EXIT("exit"),
@@ -18,7 +19,14 @@ public enum ShellCommand {
     }
 
     public static boolean isValid(String command) {
-        return Arrays.stream(ShellCommand.values()).anyMatch(c -> c.getCommand().equals(command));
+        return Arrays.stream(ShellCommand.values())
+                .anyMatch(c -> c.getCommand().equals(command));
+    }
+
+    public static String builtinCommands() {
+        return Arrays.stream(ShellCommand.values())
+                .map(ShellCommand::getCommand)
+                .collect(Collectors.joining("|"));
     }
 
 }
