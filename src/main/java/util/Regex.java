@@ -15,6 +15,8 @@ public final class Regex {
 
     public static final Supplier<Pattern> TYPE = () -> Pattern.compile("^%s\\s(\\w+)".formatted(ShellCommand.TYPE.getCommand()));
 
+    public static final Supplier<Pattern> PWD = () -> Pattern.compile("^%s".formatted(ShellCommand.PWD.getCommand()));
+
     public static final Supplier<Pattern> BUILTIN = () -> Pattern.compile("^(%s)".formatted(ShellCommand.builtinCommands()));
 
 }

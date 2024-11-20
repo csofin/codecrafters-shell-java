@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 public enum ShellCommand {
     EXIT("exit"),
     ECHO("echo"),
-    TYPE("type");
+    TYPE("type"),
+    PWD("pwd");
 
     private final String command;
 

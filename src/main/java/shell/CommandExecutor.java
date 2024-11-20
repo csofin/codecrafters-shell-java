@@ -18,7 +18,8 @@ public class CommandExecutor {
         commands = Map.of(
                 Regex.EXIT.get(), new ExitCommand(),
                 Regex.ECHO.get(), new EchoCommand(),
-                Regex.TYPE.get(), new TypeCommand()
+                Regex.TYPE.get(), new TypeCommand(),
+                Regex.PWD.get(), new WorkingDirectoryCommand()
         );
     }
 
@@ -30,7 +31,7 @@ public class CommandExecutor {
                     .filter(e -> e.first().find())
                     .findFirst()
                     .ifPresentOrElse(
-                            e -> e.second().execute(e.first().group(1)),
+                            e -> e.second().execute(e.first().group(Math.min(e.first().groupCount(), 1))),
                             () -> System.out.printf("%s: command not found%n", command)
                     );
             case String c when isExternalProgram(c) -> new ExecProgramCommand().execute(c);

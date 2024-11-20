@@ -16,4 +16,8 @@ public final class Paths {
                 .findFirst();
     }
 
+    public static Path pwd() {
+        return java.nio.file.Paths.get(".").toAbsolutePath().normalize();
+    }
+
 }

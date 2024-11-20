@@ -1,4 +1,3 @@
-import config.Environment;
 import shell.CommandExecutor;
 
 import java.util.Scanner;
@@ -6,12 +5,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Environment.getInstance().loadEnvironment(System.getenv("PATH"));
-
-        prompt();
         CommandExecutor executor = new CommandExecutor();
 
         Scanner in = new Scanner(System.in);
+
+        prompt();
         while (in.hasNextLine()) {
             String command = in.nextLine().strip();
             executor.execute(command);

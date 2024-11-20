@@ -19,6 +19,7 @@ public final class Environment {
     private List<Path> paths;
 
     private Environment() {
+        loadEnvironment(System.getenv("PATH"));
     }
 
     public static Environment getInstance() {
@@ -29,7 +30,7 @@ public final class Environment {
         return Objects.isNull(paths) ? List.of() : paths;
     }
 
-    public void loadEnvironment(String value) {
+    private void loadEnvironment(String value) {
         if (Objects.isNull(value) || value.isBlank()) {
             return;
         }

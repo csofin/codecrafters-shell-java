@@ -106,6 +106,17 @@ function run_program() {
   printf 'Got %s\nTest Passed\n' "$expected"
 }
 
+function builtin_pwd() {
+  printf 'Running test for Stage #EI0 (Navigation - The pwd builtin)\n'
+  out=$(printf 'pwd' | exec java -jar "$jar" "$@" | head -1 | sed 's:.*/::')
+  expected="codecrafters-shell-java"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$expected"
+}
+
 function test() {
   print_prompt
   printf '\n'
@@ -122,6 +133,8 @@ function test() {
   type_executable_files
   printf '\n'
   run_program
+  printf '\n'
+  builtin_pwd
 }
 
 if [ $# -eq 0 ]; then
