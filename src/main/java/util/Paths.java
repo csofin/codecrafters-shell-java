@@ -17,7 +17,16 @@ public final class Paths {
     }
 
     public static Path pwd() {
-        return java.nio.file.Paths.get(".").toAbsolutePath().normalize();
+        return java.nio.file.Paths.get(System.getProperty("user.dir")).toAbsolutePath();
+    }
+
+    public static boolean cd(String directory) {
+        Path path = java.nio.file.Paths.get(directory);
+        if (!Files.exists(path)) {
+            return false;
+        }
+        System.setProperty("user.dir", path.toAbsolutePath().toString());
+        return true;
     }
 
 }

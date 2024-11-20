@@ -7,7 +7,8 @@ public enum ShellCommand {
     EXIT("exit"),
     ECHO("echo"),
     TYPE("type"),
-    PWD("pwd");
+    PWD("pwd"),
+    CD("cd");
 
     private final String command;
 

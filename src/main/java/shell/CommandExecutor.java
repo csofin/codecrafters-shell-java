@@ -19,7 +19,8 @@ public class CommandExecutor {
                 Regex.EXIT.get(), new ExitCommand(),
                 Regex.ECHO.get(), new EchoCommand(),
                 Regex.TYPE.get(), new TypeCommand(),
-                Regex.PWD.get(), new WorkingDirectoryCommand()
+                Regex.PWD.get(), new WorkingDirectoryCommand(),
+                Regex.CD.get(), new ChangeDirectory()
         );
     }
 
