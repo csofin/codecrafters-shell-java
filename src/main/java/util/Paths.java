@@ -34,6 +34,7 @@ public final class Paths {
                 String target = Strings.afterLast(directory, "./");
                 yield target.isBlank() ? current : current.resolve(target);
             }
+            case "~" -> Path.of(System.getenv("HOME"));
             case null, default -> workingDirectory();
         };
 
