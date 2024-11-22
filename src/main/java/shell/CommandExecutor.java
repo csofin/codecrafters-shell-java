@@ -20,7 +20,7 @@ public class CommandExecutor {
                 Regex.ECHO.get(), new EchoCommand(),
                 Regex.TYPE.get(), new TypeCommand(),
                 Regex.PWD.get(), new WorkingDirectoryCommand(),
-                Regex.CD.get(), new ChangeDirectory()
+                Regex.CD.get(), new ChangeDirectoryCommand()
         );
     }
 

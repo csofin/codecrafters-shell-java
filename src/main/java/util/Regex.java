@@ -17,7 +17,11 @@ public final class Regex {
 
     public static final Supplier<Pattern> PWD = () -> Pattern.compile("^%s".formatted(ShellCommand.PWD.getCommand()));
 
-    public static final Supplier<Pattern> CD = () -> Pattern.compile("^%s\\s([a-zA-Z0-9-_:/]+)".formatted(ShellCommand.CD.getCommand()));
+    public static final Supplier<Pattern> CD = () -> Pattern.compile("^%s\\s([a-zA-Z0-9-_/.]+)".formatted(ShellCommand.CD.getCommand()));
+
+    public static final Supplier<Pattern> ABSOLUTE_PATH = () -> Pattern.compile("^[a-zA-Z0-9-_:/]+");
+
+    public static final Supplier<Pattern> RELATIVE_PATH = () -> Pattern.compile("^\\.{1,2}[/a-zA-Z0-9-_*]*");
 
     public static final Supplier<Pattern> BUILTIN = () -> Pattern.compile("^(%s)".formatted(ShellCommand.builtinCommands()));
 

@@ -67,7 +67,7 @@ function builtin_type() {
     printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
     exit 1
   fi
-  printf 'Got %s\nTest Passed\n' "$expected"
+  printf 'Got %s\nTest Passed\n' "$out"
 }
 
 function type_executable_files() {
@@ -92,7 +92,7 @@ function type_executable_files() {
     printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
     exit 1
   fi
-  printf 'Got %s\nTest Passed\n' "$expected"
+  printf 'Got %s\nTest Passed\n' "$out"
 }
 
 function run_program() {
@@ -103,7 +103,7 @@ function run_program() {
     printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
     exit 1
   fi
-  printf 'Got %s\nTest Passed\n' "$expected"
+  printf 'Got %s\nTest Passed\n' "$out"
 }
 
 function builtin_pwd() {
@@ -114,7 +114,31 @@ function builtin_pwd() {
     printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
     exit 1
   fi
-  printf 'Got %s\nTest Passed\n' "$expected"
+  printf 'Got %s\nTest Passed\n' "$out"
+}
+
+function builtin_cd_absolute() {
+  printf 'Running test for Stage #RA6 (Navigation - The cd builtin: Absolute paths)\n'
+  expected=$(printf 'pwd' | exec java -jar "$jar" "$@" | head -1 | sed 's:/[^/]*$::' | awk '{print $2;}')
+  printf '%s\n' "$expected"
+  out=$(printf 'cd %s\npwd' "$expected" | exec java -jar "$jar" "$@" | head -1 | awk '{print $3;}')
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
+}
+
+function builtin_cd_relative() {
+  printf 'Running test for Stage #GQ9 (Navigation - The cd builtin: Relative paths)\n'
+  expected=$(printf 'pwd' | exec java -jar "$jar" "$@" | head -1 | sed 's:/[^/]*$::' | sed 's:/[^/]*$::' | awk '{print $2;}')
+  printf '%s\n' "$expected"
+  out=$(printf 'cd ../../\npwd' | exec java -jar "$jar" "$@" | head -1 | awk '{print $3;}')
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
 }
 
 function test() {
@@ -135,6 +159,10 @@ function test() {
   run_program
   printf '\n'
   builtin_pwd
+  printf '\n'
+  builtin_cd_absolute
+  printf '\n'
+  builtin_cd_relative
 }
 
 if [ $# -eq 0 ]; then

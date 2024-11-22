@@ -6,7 +6,7 @@ public class WorkingDirectoryCommand implements Command {
 
     @Override
     public void execute(String arg) {
-        System.out.println(Paths.pwd());
+        System.out.println(Paths.workingDirectory());
     }
 
 }

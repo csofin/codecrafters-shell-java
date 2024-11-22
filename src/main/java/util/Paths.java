@@ -16,16 +16,33 @@ public final class Paths {
                 .findFirst();
     }
 
-    public static Path pwd() {
+    public static Path workingDirectory() {
         return java.nio.file.Paths.get(System.getProperty("user.dir")).toAbsolutePath();
     }
 
-    public static boolean cd(String directory) {
-        Path path = java.nio.file.Paths.get(directory);
+    public static boolean changeDirectory(String directory) {
+        Path path = switch (directory) {
+            case String d when Regex.ABSOLUTE_PATH.get().matcher(d).find() -> java.nio.file.Paths.get(directory);
+            case String d when Regex.RELATIVE_PATH.get().matcher(d).find() -> {
+                Path current = workingDirectory();
+                int count = Strings.occurrences(directory, "../");
+                if (count > 0) {
+                    for (int i = 0; i < count; i++) {
+                        current = current.getParent();
+                    }
+                }
+                String target = Strings.afterLast(directory, "./");
+                yield target.isBlank() ? current : current.resolve(target);
+            }
+            case null, default -> workingDirectory();
+        };
+
         if (!Files.exists(path)) {
             return false;
         }
+
         System.setProperty("user.dir", path.toAbsolutePath().toString());
+
         return true;
     }
 
