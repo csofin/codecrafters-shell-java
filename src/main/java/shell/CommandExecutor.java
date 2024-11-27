@@ -1,10 +1,10 @@
 package shell;
 
-import util.Pair;
 import util.Paths;
 import util.Regex;
 
 import java.nio.file.Path;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -28,11 +28,11 @@ public class CommandExecutor {
         switch (command) {
             case String c when isBuiltinCommand(c) -> commands.entrySet()
                     .stream()
-                    .map(e -> new Pair<>(e.getKey().matcher(command), e.getValue()))
-                    .filter(e -> e.first().find())
+                    .map(e -> new AbstractMap.SimpleEntry<Matcher, Command>(e.getKey().matcher(command), e.getValue()))
+                    .filter(e -> e.getKey().find())
                     .findFirst()
                     .ifPresentOrElse(
-                            e -> e.second().execute(e.first().group(Math.min(e.first().groupCount(), 1))),
+                            e -> e.getValue().execute(e.getKey().group(Math.min(e.getKey().groupCount(), 1))),
                             () -> System.out.printf("%s: command not found%n", command)
                     );
             case String c when isExternalProgram(c) -> new ExecProgramCommand().execute(c);
