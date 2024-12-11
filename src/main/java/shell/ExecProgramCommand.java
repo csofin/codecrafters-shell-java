@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ExecProgramCommand implements Command {
@@ -24,7 +25,9 @@ public class ExecProgramCommand implements Command {
             args = matcher.group("args");
         }
 
-        Objects.requireNonNull(command);
+        if (Objects.isNull(command)) {
+            return;
+        }
 
         final List<String> processCommands = new ArrayList<>();
 
@@ -32,8 +35,7 @@ public class ExecProgramCommand implements Command {
 
         Optional.ofNullable(args)
                 .ifPresent(arguments ->
-                        Regex.SINGLE_QUOTED_ARGS
-                                .get()
+                        resolveRegexPattern(arguments)
                                 .matcher(arguments)
                                 .results()
                                 .map(matchResult -> matchResult.group("arg"))
@@ -56,6 +58,14 @@ public class ExecProgramCommand implements Command {
             System.out.printf("%s: command not found%n", command);
         }
 
+    }
+
+    private Pattern resolveRegexPattern(String arg) {
+        return switch (arg) {
+            case String str when str.startsWith("\"") -> Regex.DOUBLE_QUOTED_ARGS.get();
+            case String str when str.startsWith("'") -> Regex.SINGLE_QUOTED_ARGS.get();
+            default -> Regex.NO_QUOTED_ARGS.get();
+        };
     }
 
 }

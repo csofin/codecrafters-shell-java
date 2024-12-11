@@ -27,6 +27,10 @@ public final class Regex {
 
     public static final Supplier<Pattern> COMMAND = () -> Pattern.compile("^(?<command>[a-zA-Z_]+)\\s(?<args>.*)");
 
-    public static final Supplier<Pattern> SINGLE_QUOTED_ARGS = () -> Pattern.compile("('?(?<arg>[^']*)'?)");
+    public static final Supplier<Pattern> NO_QUOTED_ARGS = () -> Pattern.compile("(?<arg>[^']*)");
+
+    public static final Supplier<Pattern> SINGLE_QUOTED_ARGS = () -> Pattern.compile("('(?<arg>[^']*)')");
+
+    public static final Supplier<Pattern> DOUBLE_QUOTED_ARGS = () -> Pattern.compile("\"(?<arg>.*?)\"");
 
 }

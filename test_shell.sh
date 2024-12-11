@@ -169,6 +169,24 @@ function single_quotes() {
   printf 'Got %s\nTest Passed\n' "$out"
 }
 
+function double_quotes() {
+  printf 'Running test for Stage #TG6 (Double quotes)\n'
+  phrase="apple orange pear"
+  out=$(printf 'echo "%s"' "$phrase" | exec java -jar "$jar" "$@" | head -1)
+  if [[ ! $out =~ $phrase ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$phrase" "$out"
+    exit 1
+  fi
+  printf 'Got %s\n' "$out"
+  out=$(printf 'cat "test_shell.sh"' | exec java -DPATH="/bin" -jar "$jar" "$@" | head -1 | awk '{print $2;}')
+  expected="#!/bin/bash"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
+}
+
 function test() {
   print_prompt
   printf '\n'
@@ -195,6 +213,8 @@ function test() {
   builtin_cd_home
   printf '\n'
   single_quotes
+  printf '\n'
+  double_quotes
 }
 
 if [ $# -eq 0 ]; then
