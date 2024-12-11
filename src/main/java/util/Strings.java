@@ -32,7 +32,7 @@ public final class Strings {
 
     public static String normalize(String string) {
         Objects.requireNonNull(string);
-        return string.replaceAll("\\s{2,}", " ").strip();
+        return string.replaceAll("\\s{2,}", " ").replaceAll("\\\\", "").strip();
     }
 
 }

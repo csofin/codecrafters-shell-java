@@ -187,6 +187,18 @@ function double_quotes() {
   printf 'Got %s\nTest Passed\n' "$out"
 }
 
+function backslash_outside_quotes() {
+  printf 'Running test for Stage #YT5 (Backslash outside quotes)\n'
+  input="world\ \ \ \ \ \ script"
+  expected="world      script"
+  out=$(printf 'echo %s' "$input" | exec java -jar "$jar" "$@" | head -1)
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
+}
+
 function test() {
   print_prompt
   printf '\n'
