@@ -25,4 +25,8 @@ public final class Regex {
 
     public static final Supplier<Pattern> BUILTIN = () -> Pattern.compile("^(%s)".formatted(ShellCommand.builtinCommands()));
 
+    public static final Supplier<Pattern> COMMAND = () -> Pattern.compile("^(?<command>[a-zA-Z_]+)\\s(?<args>.*)");
+
+    public static final Supplier<Pattern> SINGLE_QUOTED_ARGS = () -> Pattern.compile("('?(?<arg>[^']*)'?)");
+
 }

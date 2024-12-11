@@ -30,4 +30,9 @@ public final class Strings {
         return count;
     }
 
+    public static String normalize(String string) {
+        Objects.requireNonNull(string);
+        return string.replaceAll("\\s{2,}", " ").strip();
+    }
+
 }
