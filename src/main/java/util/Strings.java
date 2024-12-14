@@ -101,8 +101,8 @@ public final class Strings {
     }
 
     private static String parseWithoutPreservation(String str) {
-        Pattern regex = Regex.DOUBLE_QUOTED_ARGS.get();
-        Matcher matcher = regex.matcher(str);
+        Pattern pattern = Regex.DOUBLE_QUOTED_ARGS.get();
+        Matcher matcher = pattern.matcher(str);
         return matcher
                 .results()
                 .map(matchResult -> matchResult.group("arg"))
