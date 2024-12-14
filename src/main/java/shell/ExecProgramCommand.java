@@ -1,6 +1,7 @@
 package shell;
 
 import util.Regex;
+import util.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,26 +27,16 @@ public class ExecProgramCommand implements Command {
         }
 
         if (Objects.isNull(command)) {
+            System.out.printf("%s: command not found%n", command);
             return;
         }
 
-        final List<String> processCommands = new ArrayList<>();
-
-        processCommands.add(command);
-
-        Optional.ofNullable(args)
-                .ifPresent(arguments ->
-                        resolveRegexPattern(arguments)
-                                .matcher(arguments)
-                                .results()
-                                .map(matchResult -> matchResult.group("arg"))
-                                .map(String::strip)
-                                .filter(Predicate.not(String::isBlank))
-                                .forEach(processCommands::add)
-                );
+        List<String> commands = new ArrayList<>();
+        commands.add(command);
+        commands.addAll(extractProcessArguments(args));
 
         try {
-            Process process = new ProcessBuilder(processCommands).start();
+            Process process = new ProcessBuilder(commands).start();
             if (process.waitFor() != 0) {
                 System.out.printf("%s: command not found%n", command);
                 return;
@@ -60,10 +51,23 @@ public class ExecProgramCommand implements Command {
 
     }
 
+    private List<String> extractProcessArguments(String args) {
+        return Optional.ofNullable(args)
+                .map(arguments ->
+                        resolveRegexPattern(arguments)
+                                .matcher(arguments)
+                                .results()
+                                .map(matchResult -> matchResult.group("arg"))
+                                .map(String::strip)
+                                .filter(Predicate.not(String::isBlank))
+                                .toList())
+                .orElse(List.of());
+    }
+
     private Pattern resolveRegexPattern(String arg) {
         return switch (arg) {
-            case String str when str.startsWith("\"") -> Regex.DOUBLE_QUOTED_ARGS.get();
-            case String str when str.startsWith("'") -> Regex.SINGLE_QUOTED_ARGS.get();
+            case String str when Strings.isDoubleQuoted(str) -> Regex.DOUBLE_QUOTED_ARGS.get();
+            case String str when Strings.isSingleQuoted(str) -> Regex.SINGLE_QUOTED_ARGS.get();
             default -> Regex.NO_QUOTED_ARGS.get();
         };
     }
