@@ -2,6 +2,7 @@ package shell;
 
 import util.Paths;
 import util.Regex;
+import util.Strings;
 
 import java.nio.file.Path;
 import java.util.AbstractMap;
@@ -26,7 +27,7 @@ public class CommandExecutor {
 
     public void execute(String command) {
         switch (command) {
-            case String c when isBuiltinCommand(c) -> commands.entrySet()
+            case String cmd when isBuiltin(cmd) -> commands.entrySet()
                     .stream()
                     .map(e -> new AbstractMap.SimpleEntry<Matcher, Command>(e.getKey().matcher(command), e.getValue()))
                     .filter(e -> e.getKey().find())
@@ -35,12 +36,14 @@ public class CommandExecutor {
                             e -> e.getValue().execute(e.getKey().group(Math.min(e.getKey().groupCount(), 1))),
                             () -> System.out.printf("%s: command not found%n", command)
                     );
-            case String c when isExternalProgram(c) -> new ExecProgramCommand().execute(c);
+            case String cmd when isExternalProgram(cmd) -> new ExecProgramCommand().execute(cmd);
+            case String cmd when isExecutable(cmd) ->
+                    new ConcatenateCommand().execute(cmd.substring(cmd.lastIndexOf(' ') + 1));
             default -> System.out.printf("%s: command not found%n", command);
         }
     }
 
-    private boolean isBuiltinCommand(String command) {
+    private boolean isBuiltin(String command) {
         Pattern pattern = Regex.BUILTIN.get();
         Matcher matcher = pattern.matcher(command);
         return matcher.find();
@@ -50,6 +53,13 @@ public class CommandExecutor {
         String[] parts = command.split("\\s");
         Optional<Path> application = Paths.resolveApplication(parts[0]);
         return application.isPresent();
+    }
+
+    private boolean isExecutable(String command) {
+        if (!Strings.isStartQuoted(command)) {
+            return false;
+        }
+        return Strings.isQuoted(command.substring(0, command.lastIndexOf(' ')));
     }
 
 }

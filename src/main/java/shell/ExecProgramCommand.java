@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ExecProgramCommand implements Command {
 
@@ -42,8 +43,9 @@ public class ExecProgramCommand implements Command {
                 return;
             }
 
-            try (BufferedReader reader = process.inputReader()) {
-                System.out.println(reader.lines().collect(Collectors.joining("\n")));
+            try (BufferedReader reader = process.inputReader();
+                 Stream<String> lines = reader.lines()) {
+                System.out.println(lines.collect(Collectors.joining("\n")));
             }
         } catch (IOException | InterruptedException e) {
             System.out.printf("%s: command not found%n", command);

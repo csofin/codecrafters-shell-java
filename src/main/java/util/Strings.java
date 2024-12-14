@@ -40,6 +40,14 @@ public final class Strings {
         return count;
     }
 
+    public static boolean isQuoted(String str) {
+        return isSingleQuoted(str) || isDoubleQuoted(str);
+    }
+
+    public static boolean isStartQuoted(String str) {
+        return str.startsWith("'") || str.startsWith("\"");
+    }
+
     public static boolean isSingleQuoted(String str) {
         return str.startsWith("'") && str.endsWith("'");
     }
@@ -66,8 +74,6 @@ public final class Strings {
     }
 
     private static String parseWithPreservation(String str) {
-        Objects.requireNonNull(str);
-
         StringBuilder builder = new StringBuilder();
 
         List<String> tokens = Arrays.stream(str.splitWithDelimiters("\"|\\\\n|\\\\", 0))

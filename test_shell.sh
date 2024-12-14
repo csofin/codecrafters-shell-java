@@ -222,6 +222,17 @@ function backslash_within_double_quotes() {
   printf 'Test Passed\n'
 }
 
+function execute_quoted_executable() {
+  printf 'Running test for Stage #QJ0 (Executing a quoted executable)\n'
+  out=$(printf '"exe should cat this file" test_shell.sh' | exec java -DPATH="/bin" -jar "$jar" "$@" | head -1 | awk '{print $2;}')
+  expected="#!/bin/bash"
+  if [[ ! $out =~ $expected ]] ; then
+    printf 'Expected %s, got %s\nTest Failed' "$expected" "$out"
+    exit 1
+  fi
+  printf 'Got %s\nTest Passed\n' "$out"
+}
+
 function test() {
   print_prompt
   printf '\n'
@@ -256,6 +267,8 @@ function test() {
   backslash_within_single_quotes
   printf '\n'
   backslash_within_double_quotes
+  printf '\n'
+  execute_quoted_executable
 }
 
 if [ $# -eq 0 ]; then
